@@ -159,8 +159,8 @@ class minesweepingGrid {
     // minesweeper-main as a grid element
     const gridStrings = {
       start: `<div id="minesweeper-main" class="minesweeper-grid"
-        style="grid-template-columns: ${columnRowLayout(this.xDim)};
-        grid-template-rows: ${columnRowLayout(this.yDim)};"
+        style="grid-template-columns: ${columnRowLayout(this.yDim)};
+        grid-template-rows: ${columnRowLayout(this.xDim)};"
       >`,
       end: "</div>",
     };
