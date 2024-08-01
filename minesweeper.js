@@ -119,6 +119,8 @@ class minesweepingGrid {
     }
   }
 
+  countAllNeighbourhoods() {}
+
   countNeighbours(xCoord, yCoord) {
     let neighbourMines = 0;
     const differences = [-1, 0, 1];
