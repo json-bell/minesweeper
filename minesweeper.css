@@ -1,0 +1,23 @@
+.minesweeper-grid {
+  display: inline-grid;
+  grid-gap: 5px;
+
+  padding: 2px;
+  border: dashed 1px;
+  margin: 10px;
+}
+
+.minesweeper-square {
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+}
+
+.minesweeper-square:hover {
+  background-color: aquamarine;
+}

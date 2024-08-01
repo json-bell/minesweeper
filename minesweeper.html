@@ -8,8 +8,23 @@
   </head>
   <body>
     <h1>Minesweeper:</h1>
-    <button onclick="newMinesweeper(7)">Reinitialise</button>
-    <div id="minesweeper-main"></div>
+    <form>
+      Number of columns:
+      <input type="number" name="columnInput" id="columnInput" /><br />
+      Number of rows:
+      <input type="number" name="rowInput" id="rowInput" /><br />
+      <input
+        type="button"
+        onclick="newMinesweeper(
+      Number(document.querySelector('#columnInput').value),
+      Number(document.querySelector('#rowInput').value ))"
+        value="Submit"
+      />
+    </form>
+    <button onclick="newMinesweeper(10,5)">Reinitialise</button>
+    <div id="minesweeper-surrounding">
+      <!--  -->
+    </div>
     <script src="./minesweeper.js"></script>
   </body>
 </html>

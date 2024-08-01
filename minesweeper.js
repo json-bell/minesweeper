@@ -1,4 +1,4 @@
-function newMinesweeper(xDim = 7, yDim = 7) {
+function newMinesweeper(xDim = 5, yDim = 5) {
   const totalMines = 10;
   const mineGrid = new minesweepingGrid(xDim, yDim, totalMines);
   mineGrid.htmlVisualisationAll();
@@ -7,7 +7,8 @@ function newMinesweeper(xDim = 7, yDim = 7) {
 
 class cell {
   constructor(xCoord, yCoord) {
-    this.coords = [xCoord, yCoord];
+    this.x = xCoord;
+    this.y = yCoord;
     this.isMine = false;
     this.isFlag = false;
     this.isRevealed = false;
@@ -16,6 +17,10 @@ class cell {
 
   toggleFlag() {
     this.isFlag = !this.isFlag;
+  }
+
+  updateHTML() {
+    document.getElementById(`square(${this.x},${this.y})`);
   }
 }
 
@@ -32,6 +37,10 @@ function makeEmptyGrid(xDim, yDim) {
 
 function randomInt(maxVal) {
   return Math.floor(Math.random() * maxVal);
+}
+
+function columnRowLayout(number) {
+  return Array(number).fill(" 30pt").join("");
 }
 
 class minesweepingGrid {
@@ -99,24 +108,35 @@ class minesweepingGrid {
   }
 
   htmlVisualisationAll() {
+    // minesweeper-main as a grid element
     const gridStrings = {
-      start: "",
-      end: "",
+      start: `<div id="minesweeper-main" class="minesweeper-grid"
+        style="grid-template-columns: ${columnRowLayout(this.xDim)};
+        grid-template-rows: ${columnRowLayout(this.yDim)};"
+      >`,
+      end: "</div>",
     };
+    document.getElementById("minesweeper-surrounding").innerHTML =
+      gridStrings.start + gridStrings.end;
+
+    // adding all the grid elements simultaneously
     const squareStrings = {
       start: "",
       end: "",
     };
-    document.getElementById("minesweeper-main").innerHTML = `<br>`;
+    const stringsForGrid = [];
     for (const row of this.grid) {
-      document.getElementById("minesweeper-main").innerHTML += `<br>`;
+      const stringsForRow = [];
       for (const square of row) {
-        document.getElementById("minesweeper-main").innerHTML += `${
-          square.isMine ? "X" : "_"
-        },`;
+        let squareString = `<button class="minesweeper-square" id="square(${square.x},${square.y})">`;
+        squareString += `${square.isMine ? "X" : "_"}`;
+        squareString += "</button>";
+
+        stringsForRow.push(squareString);
       }
+      stringsForGrid.push(stringsForRow.join(""));
     }
+    document.getElementById("minesweeper-main").innerHTML =
+      stringsForGrid.join("");
   }
 }
-
-console.log(newMinesweeper(4).textVisualisationAll());
