@@ -10,39 +10,6 @@ function newMinesweeper(xDim = 5, yDim = 5) {
 //   else console.log("no shift :(");
 // });
 
-class cell {
-  constructor(xCoord, yCoord) {
-    this.x = xCoord;
-    this.y = yCoord;
-    this.isMine = false;
-    this.isFlag = false;
-    this.isRevealed = false;
-    this.mineNeighbours = 0;
-    this.temp = "NO";
-  }
-
-  toggleFlag() {
-    this.isFlag = !this.isFlag;
-  }
-
-  clicked() {
-    // let shifted;
-    // window.addEventListener("click", function (e) {
-    //   shifted = e.shiftKey;
-    // });
-    // if (shifted) {
-    //   this.temp = "S";
-    // }
-    this.temp = "U";
-    this.updateHTML();
-  }
-
-  updateHTML() {
-    document.getElementById(`square(${this.x},${this.y})`).innerHTML =
-      this.temp;
-  }
-}
-
 function makeEmptyGrid(xDim, yDim) {
   const grid = [];
   for (let x = 0; x < xDim; x++) {
@@ -61,6 +28,38 @@ function randomInt(maxVal) {
 function columnRowLayout(number) {
   return Array(number).fill(" 30pt").join("");
 }
+class cell {
+  constructor(xCoord, yCoord) {
+    this.x = xCoord;
+    this.y = yCoord;
+    this.isMine = false;
+    this.isFlag = false;
+    this.isRevealed = false;
+    this.neighbourMineCount = "_";
+    this.temp = "NO";
+  }
+
+  toggleFlag() {
+    this.isFlag = !this.isFlag;
+  }
+
+  clicked() {
+    // const shifted = window.addEventListener("click", function (e) {
+    //   const shifted = e.shiftKey;
+    //   return shifted;
+    // });
+    // if (shifted) {
+    //   this.temp = "S";
+    // }
+    this.temp = "U";
+    this.updateHTML();
+  }
+
+  updateHTML() {
+    document.getElementById(`square(${this.x},${this.y})`).innerHTML =
+      this.temp;
+  }
+}
 
 class minesweepingGrid {
   constructor(xDim, yDim, totalMines) {
@@ -68,7 +67,6 @@ class minesweepingGrid {
     this.yDim = yDim;
     this.grid = makeEmptyGrid(xDim, yDim);
     this.totalMines = totalMines;
-    this.currentMine; // Temporary variable for testing addMine()
     this.initialise();
   }
 
@@ -95,6 +93,7 @@ class minesweepingGrid {
   addRandomMine() {
     let hasAdded = false;
     const mineCount = this.countMines();
+    // should probably check there is a free space or smth, or get an array of coordinates which aren't mines mb
 
     while (!hasAdded) {
       const newX = randomInt(this.xDim);
@@ -111,6 +110,32 @@ class minesweepingGrid {
     while (this.countMines() < this.totalMines) {
       this.addRandomMine();
     }
+    for (let x = 0; x < this.xDim; x++) {
+      for (let y = 0; y < this.yDim; y++) {
+        // console.log({ x, y }, "maxes:", this.xDim, this.yDim);
+        // console.log(this.grid[x][y]);
+        this.grid[x][y].neighbourMineCount = this.countNeighbours(x, y);
+      }
+    }
+  }
+
+  countNeighbours(xCoord, yCoord) {
+    let neighbourMines = 0;
+    const differences = [-1, 0, 1];
+    for (const dx of differences) {
+      const xToCheck = xCoord + dx;
+      if (xToCheck >= 0 && xToCheck < this.xDim) {
+        for (const dy of differences) {
+          const yToCheck = yCoord + dy;
+          if (yToCheck >= 0 && yToCheck < this.yDim) {
+            if (this.grid[xToCheck][yToCheck].isMine) {
+              neighbourMines++;
+            }
+          }
+        }
+      }
+    }
+    return neighbourMines;
   }
 
   textVisualisationAll() {
@@ -144,7 +169,12 @@ class minesweepingGrid {
       const stringsForRow = [];
       for (const square of row) {
         let squareString = `<button class="minesweeper-square" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked()">`;
-        squareString += `${square.isMine ? "X" : "_"}`;
+        if (square.isMine) {
+          squareString += "X";
+        } else {
+          squareString += square.neighbourMineCount;
+        }
+
         squareString += "</button>";
 
         stringsForRow.push(squareString);
