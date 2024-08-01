@@ -15,13 +15,19 @@
       <input type="number" name="rowInput" id="rowInput" /><br />
       <input
         type="button"
-        onclick="newMinesweeper(
+        onclick="mineGrid = newMinesweeper(
       Number(document.querySelector('#columnInput').value),
       Number(document.querySelector('#rowInput').value ))"
-        value="Submit"
+        value="Start"
+        id="startNewGame"
       />
     </form>
-    <button onclick="newMinesweeper(10,5)">Reinitialise</button>
+    <button
+      onclick="mineGrid = newMinesweeper(10,5)"
+      ondblclick="mineGrid = newMinesweeper(20,10)"
+    >
+      Reinitialise
+    </button>
     <div id="minesweeper-surrounding">
       <!--  -->
     </div>

@@ -5,6 +5,11 @@ function newMinesweeper(xDim = 5, yDim = 5) {
   return mineGrid;
 }
 
+// window.addEventListener("click", function (e) {
+//   if (e.shiftKey) console.log("shift!!");
+//   else console.log("no shift :(");
+// });
+
 class cell {
   constructor(xCoord, yCoord) {
     this.x = xCoord;
@@ -13,14 +18,28 @@ class cell {
     this.isFlag = false;
     this.isRevealed = false;
     this.mineNeighbours = 0;
+    this.temp = "NO";
   }
 
   toggleFlag() {
     this.isFlag = !this.isFlag;
   }
 
+  clicked() {
+    // let shifted;
+    // window.addEventListener("click", function (e) {
+    //   shifted = e.shiftKey;
+    // });
+    // if (shifted) {
+    //   this.temp = "S";
+    // }
+    this.temp = "U";
+    this.updateHTML();
+  }
+
   updateHTML() {
-    document.getElementById(`square(${this.x},${this.y})`);
+    document.getElementById(`square(${this.x},${this.y})`).innerHTML =
+      this.temp;
   }
 }
 
@@ -120,15 +139,11 @@ class minesweepingGrid {
       gridStrings.start + gridStrings.end;
 
     // adding all the grid elements simultaneously
-    const squareStrings = {
-      start: "",
-      end: "",
-    };
     const stringsForGrid = [];
     for (const row of this.grid) {
       const stringsForRow = [];
       for (const square of row) {
-        let squareString = `<button class="minesweeper-square" id="square(${square.x},${square.y})">`;
+        let squareString = `<button class="minesweeper-square" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked()">`;
         squareString += `${square.isMine ? "X" : "_"}`;
         squareString += "</button>";
 
