@@ -1,8 +1,7 @@
-function newMinesweeper(dimension) {
-  const xDim = dimension + 5;
-  const yDim = dimension;
+function newMinesweeper(xDim = 7, yDim = 7) {
   const totalMines = 10;
   const mineGrid = new minesweepingGrid(xDim, yDim, totalMines);
+  mineGrid.htmlVisualisationAll();
   return mineGrid;
 }
 
@@ -11,6 +10,7 @@ class cell {
     this.coords = [xCoord, yCoord];
     this.isMine = false;
     this.isFlag = false;
+    this.isRevealed = false;
     this.mineNeighbours = 0;
   }
 
@@ -72,9 +72,6 @@ class minesweepingGrid {
       const newX = randomInt(this.xDim);
       const newY = randomInt(this.yDim);
 
-      console.log(
-        `Trying to add mine number ${mineCount + 1} at x=${newX} and y=${newY}`
-      );
       if (this.grid[newX][newY].isMine === false) {
         this.grid[newX][newY].isMine = true;
         hasAdded = true;
@@ -88,18 +85,38 @@ class minesweepingGrid {
     }
   }
 
-  visualiseGrid() {
+  textVisualisationAll() {
     const visuals = [];
     for (const row of this.grid) {
       const viewedRow = [];
       for (const cell of row) {
         if (cell.isMine) viewedRow.push("X");
-        else viewedRow.push(".");
+        else viewedRow.push("_");
       }
       visuals.push(viewedRow);
     }
     return visuals;
   }
+
+  htmlVisualisationAll() {
+    const gridStrings = {
+      start: "",
+      end: "",
+    };
+    const squareStrings = {
+      start: "",
+      end: "",
+    };
+    document.getElementById("minesweeper-main").innerHTML = `<br>`;
+    for (const row of this.grid) {
+      document.getElementById("minesweeper-main").innerHTML += `<br>`;
+      for (const square of row) {
+        document.getElementById("minesweeper-main").innerHTML += `${
+          square.isMine ? "X" : "_"
+        },`;
+      }
+    }
+  }
 }
 
-console.log(newMinesweeper(4).visualiseGrid());
+console.log(newMinesweeper(4).textVisualisationAll());
