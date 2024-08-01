@@ -1,6 +1,6 @@
 .minesweeper-grid {
   display: inline-grid;
-  grid-gap: 5px;
+  grid-gap: 0px;
 
   padding: 2px;
   border: dashed 1px;
@@ -10,14 +10,30 @@
 .minesweeper-square {
   justify-content: center;
   align-items: center;
-  margin: 2px;
+  margin: 0px;
   padding: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid black;
+  border: 4px outset rgb(199, 199, 199);
+  /* color: rgb(240, 240, 240); */
 }
 
 .minesweeper-square:hover {
-  background-color: rgb(199, 199, 199);
+  /* background-color: rgb(240, 240, 240); */
+  border: 4px inset rgb(219, 219, 219);
+  margin: 0px;
+}
+
+.revealed {
+  background-color: rgb(196, 255, 107);
+  color: black;
+}
+
+.revealed:hover {
+  background-color: rgb(95, 255, 47);
+}
+
+.boomer {
+  background-color: rgb(211, 141, 95);
 }

@@ -51,13 +51,15 @@ class cell {
     // if (shifted) {
     //   this.temp = "S";
     // }
-    this.temp = "U";
+    this.isRevealed = true;
     this.updateHTML();
   }
 
+  revealAllNeighbours() {}
+
   updateHTML() {
-    document.getElementById(`square(${this.x},${this.y})`).innerHTML =
-      this.temp;
+    document.getElementById(`square(${this.x},${this.y})`).classList +=
+      " revealed";
   }
 }
 
@@ -110,16 +112,16 @@ class minesweepingGrid {
     while (this.countMines() < this.totalMines) {
       this.addRandomMine();
     }
+    this.countAllNeighbourhoods();
+  }
+
+  countAllNeighbourhoods() {
     for (let x = 0; x < this.xDim; x++) {
       for (let y = 0; y < this.yDim; y++) {
-        // console.log({ x, y }, "maxes:", this.xDim, this.yDim);
-        // console.log(this.grid[x][y]);
         this.grid[x][y].neighbourMineCount = this.countNeighbours(x, y);
       }
     }
   }
-
-  countAllNeighbourhoods() {}
 
   countNeighbours(xCoord, yCoord) {
     let neighbourMines = 0;
@@ -146,7 +148,7 @@ class minesweepingGrid {
       const viewedRow = [];
       for (const cell of row) {
         if (cell.isMine) viewedRow.push("X");
-        else viewedRow.push("_");
+        else viewedRow.push(cell.neighbourMineCount);
       }
       visuals.push(viewedRow);
     }
@@ -170,11 +172,14 @@ class minesweepingGrid {
     for (const row of this.grid) {
       const stringsForRow = [];
       for (const square of row) {
-        let squareString = `<button class="minesweeper-square" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked()">`;
+        let classes = "minesweeper-square";
+        if (square.isMine) classes += " boomer";
+        let squareString = `<button class="${classes}" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked()">`;
         if (square.isMine) {
           squareString += "X";
         } else {
-          squareString += square.neighbourMineCount;
+          const neighboursNum = square.neighbourMineCount;
+          squareString += neighboursNum === 0 ? "" : neighboursNum;
         }
 
         squareString += "</button>";
@@ -185,5 +190,6 @@ class minesweepingGrid {
     }
     document.getElementById("minesweeper-main").innerHTML =
       stringsForGrid.join("");
+    // also show array:
   }
 }
