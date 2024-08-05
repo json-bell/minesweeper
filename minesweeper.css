@@ -21,17 +21,19 @@
 
 .minesweeper-square:hover {
   /* background-color: rgb(240, 240, 240); */
-  border: 4px inset rgb(219, 219, 219);
+  border: 4px double rgb(219, 219, 219);
   margin: 0px;
 }
 
 .revealed {
-  background-color: rgb(196, 255, 107);
+  background-color: rgb(223, 255, 175);
   color: black;
+  border: 1px double rgb(219, 219, 219);
 }
 
 .revealed:hover {
-  background-color: rgb(95, 255, 47);
+  background-color: rgb(198, 255, 181);
+  border: 1px double rgb(219, 219, 219);
 }
 
 .boomer {

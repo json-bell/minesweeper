@@ -1,6 +1,6 @@
-function newMinesweeper(xDim = 5, yDim = 5) {
+function newMinesweeper(totalCols = 20, totalRows = 5) {
   const totalMines = 10;
-  const mineGrid = new minesweepingGrid(xDim, yDim, totalMines);
+  const mineGrid = new minesweepingGrid(totalRows, totalCols, totalMines);
   mineGrid.htmlVisualisationAll();
   return mineGrid;
 }
@@ -43,7 +43,7 @@ class cell {
     this.isFlag = !this.isFlag;
   }
 
-  clicked() {
+  clicked(mineGrid) {
     // const shifted = window.addEventListener("click", function (e) {
     //   const shifted = e.shiftKey;
     //   return shifted;
@@ -53,9 +53,31 @@ class cell {
     // }
     this.isRevealed = true;
     this.updateHTML();
+    if (this.neighbourMineCount === 0) {
+      this.revealAllNeighbours(mineGrid);
+    }
   }
 
-  revealAllNeighbours() {}
+  revealAllNeighbours(mineGrid) {
+    const xCoord = this.x;
+    const yCoord = this.y;
+    const differences = [-1, 0, 1];
+    console.log(`Revealing Neighbours of ${xCoord},${yCoord}`);
+    for (const dx of differences) {
+      const xToCheck = xCoord + dx;
+      if (xToCheck >= 0 && xToCheck < mineGrid.xDim) {
+        for (const dy of differences) {
+          const yToCheck = yCoord + dy;
+          if (yToCheck >= 0 && yToCheck < mineGrid.yDim) {
+            console.log(`gotta reveal (${xToCheck},${yToCheck})`);
+            if (!mineGrid.grid[xToCheck][yToCheck].isRevealed) {
+              mineGrid.grid[xToCheck][yToCheck].clicked(mineGrid);
+            }
+          }
+        }
+      }
+    }
+  }
 
   updateHTML() {
     document.getElementById(`square(${this.x},${this.y})`).classList +=
@@ -167,14 +189,14 @@ class minesweepingGrid {
     document.getElementById("minesweeper-surrounding").innerHTML =
       gridStrings.start + gridStrings.end;
 
-    // adding all the grid elements simultaneously
+    // adding all the grid elements, including buttons interacting with mineGrid
     const stringsForGrid = [];
     for (const row of this.grid) {
       const stringsForRow = [];
       for (const square of row) {
         let classes = "minesweeper-square";
         if (square.isMine) classes += " boomer";
-        let squareString = `<button class="${classes}" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked()">`;
+        let squareString = `<button class="${classes}" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked(mineGrid)">`;
         if (square.isMine) {
           squareString += "X";
         } else {
