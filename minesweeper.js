@@ -1,5 +1,4 @@
-function newMinesweeper(totalCols = 20, totalRows = 5) {
-  const totalMines = 10;
+function newMinesweeper(totalCols = 20, totalRows = 5, totalMines = 3) {
   const mineGrid = new minesweepingGrid(totalRows, totalCols, totalMines);
   mineGrid.htmlVisualisationAll();
   return mineGrid;
@@ -52,6 +51,11 @@ class cell {
     //   this.temp = "S";
     // }
     this.isRevealed = true;
+    mineGrid.totalRevealed += 1;
+    console.log(
+      mineGrid.xDim * mineGrid.yDim -
+        (mineGrid.totalRevealed + mineGrid.totalMines)
+    );
     this.updateHTML();
     if (this.neighbourMineCount === 0) {
       this.revealAllNeighbours(mineGrid);
@@ -62,14 +66,12 @@ class cell {
     const xCoord = this.x;
     const yCoord = this.y;
     const differences = [-1, 0, 1];
-    console.log(`Revealing Neighbours of ${xCoord},${yCoord}`);
     for (const dx of differences) {
       const xToCheck = xCoord + dx;
       if (xToCheck >= 0 && xToCheck < mineGrid.xDim) {
         for (const dy of differences) {
           const yToCheck = yCoord + dy;
           if (yToCheck >= 0 && yToCheck < mineGrid.yDim) {
-            console.log(`gotta reveal (${xToCheck},${yToCheck})`);
             if (!mineGrid.grid[xToCheck][yToCheck].isRevealed) {
               mineGrid.grid[xToCheck][yToCheck].clicked(mineGrid);
             }
@@ -91,6 +93,7 @@ class minesweepingGrid {
     this.yDim = yDim;
     this.grid = makeEmptyGrid(xDim, yDim);
     this.totalMines = totalMines;
+    this.totalRevealed = 0;
     this.initialise();
   }
 
