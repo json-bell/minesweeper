@@ -1,0 +1,46 @@
+.minesweeper-grid {
+  display: inline-grid;
+  grid-gap: 0px;
+
+  padding: 2px;
+  border: dashed 1px;
+  margin: 10px;
+}
+
+.minesweeper-square {
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 4px outset rgb(199, 199, 199);
+  /* color: rgb(240, 240, 240); */
+}
+
+.minesweeper-square:hover {
+  /* background-color: rgb(240, 240, 240); */
+  border: 4px double rgb(219, 219, 219);
+  margin: 0px;
+}
+
+.revealed {
+  background-color: rgb(223, 255, 175);
+  color: black;
+  border: 1px double rgb(219, 219, 219);
+}
+/* 
+.revealed:hover {
+  background-color: rgb(198, 255, 181);
+  border: 1px double rgb(219, 219, 219);
+} */
+
+.boomer {
+  background-color: rgb(211, 141, 95);
+}
+
+.flagged {
+  background-color: darkred;
+  font-size: larger;
+}

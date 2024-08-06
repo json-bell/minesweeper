@@ -43,28 +43,25 @@ class cell {
   }
 
   clicked(mineGrid) {
-    // const shifted = window.addEventListener("click", function (e) {
-    //   const shifted = e.shiftKey;
-    //   return shifted;
-    // });
-    // if (shifted) {
-    //   this.temp = "S";
-    // }
-    this.isRevealed = true;
-    mineGrid.totalRevealed += 1;
-    // console.log(
-    //   mineGrid.xDim * mineGrid.yDim -
-    //     (mineGrid.totalRevealed + mineGrid.totalMines)
-    // );
-    this.updateHTML();
-    if (this.neighbourMineCount === 0) {
-      this.revealAllNeighbours(mineGrid);
-    }
-
-    if (mineGrid.shiftPressed === true) {
-      document.getElementById(`square(${this.x},${this.y})`).classList +=
-        " flagged";
-      console.log("flag");
+    if (mineGrid.shiftPressed === false) {
+      if (!this.isFlag) {
+        this.isRevealed = true;
+        mineGrid.totalRevealed += 1;
+        this.updateHTML();
+        if (this.neighbourMineCount === 0) {
+          this.revealAllNeighbours(mineGrid);
+        }
+      }
+    } else {
+      if (this.isFlag) {
+        document
+          .getElementById(`square(${this.x},${this.y})`)
+          .classList.remove("flagged");
+      } else {
+        document.getElementById(`square(${this.x},${this.y})`).classList +=
+          " flagged";
+      }
+      this.toggleFlag();
     }
   }
 
