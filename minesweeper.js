@@ -52,13 +52,19 @@ class cell {
     // }
     this.isRevealed = true;
     mineGrid.totalRevealed += 1;
-    console.log(
-      mineGrid.xDim * mineGrid.yDim -
-        (mineGrid.totalRevealed + mineGrid.totalMines)
-    );
+    // console.log(
+    //   mineGrid.xDim * mineGrid.yDim -
+    //     (mineGrid.totalRevealed + mineGrid.totalMines)
+    // );
     this.updateHTML();
     if (this.neighbourMineCount === 0) {
       this.revealAllNeighbours(mineGrid);
+    }
+
+    if (mineGrid.shiftPressed === true) {
+      document.getElementById(`square(${this.x},${this.y})`).classList +=
+        " flagged";
+      console.log("flag");
     }
   }
 
@@ -95,6 +101,19 @@ class minesweepingGrid {
     this.totalMines = totalMines;
     this.totalRevealed = 0;
     this.initialise();
+    this.checkShift();
+    this.shiftPressed = false;
+  }
+
+  checkShift() {
+    document.addEventListener("keydown", (event) => {
+      this.shiftPressed = event.shiftKey;
+      console.log(this.shiftPressed);
+    });
+    document.addEventListener("keyup", (event) => {
+      this.shiftPressed = event.shiftKey;
+      console.log(this.shiftPressed);
+    });
   }
 
   countMines() {
