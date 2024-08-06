@@ -45,24 +45,34 @@ class cell {
   clicked(mineGrid) {
     if (mineGrid.shiftPressed === false) {
       if (!this.isFlag) {
-        this.isRevealed = true;
-        mineGrid.totalRevealed += 1;
-        this.updateHTML();
-        if (this.neighbourMineCount === 0) {
-          this.revealAllNeighbours(mineGrid);
-        }
+        this.revealClicked(mineGrid);
       }
     } else {
-      if (this.isFlag) {
-        document
-          .getElementById(`square(${this.x},${this.y})`)
-          .classList.remove("flagged");
-      } else {
-        document.getElementById(`square(${this.x},${this.y})`).classList +=
-          " flagged";
+      if (!this.isRevealed) {
+        this.flagClicked(mineGrid);
       }
-      this.toggleFlag();
     }
+  }
+
+  revealClicked(mineGrid) {
+    this.isRevealed = true;
+    mineGrid.totalRevealed += 1;
+    this.htmlReveal();
+    if (this.neighbourMineCount === 0) {
+      this.revealAllNeighbours(mineGrid);
+    }
+  }
+
+  flagClicked(mineGrid) {
+    if (this.isFlag) {
+      document
+        .getElementById(`square(${this.x},${this.y})`)
+        .classList.remove("flagged");
+    } else {
+      document.getElementById(`square(${this.x},${this.y})`).classList +=
+        " flagged";
+    }
+    this.toggleFlag();
   }
 
   revealAllNeighbours(mineGrid) {
@@ -84,9 +94,15 @@ class cell {
     }
   }
 
-  updateHTML() {
-    document.getElementById(`square(${this.x},${this.y})`).classList +=
-      " revealed";
+  htmlReveal() {
+    const currentCell = document.getElementById(`square(${this.x},${this.y})`);
+    currentCell.classList += " revealed";
+    if (this.isMine) {
+      currentCell.innerHTML = "X";
+    } else {
+      const neighboursNum = this.neighbourMineCount;
+      currentCell.innerHTML = neighboursNum === 0 ? "" : String(neighboursNum);
+    }
   }
 }
 
@@ -216,12 +232,15 @@ class minesweepingGrid {
         let classes = "minesweeper-square";
         if (square.isMine) classes += " boomer";
         let squareString = `<button class="${classes}" id="square(${square.x},${square.y})" onclick="mineGrid.grid[${square.x}][${square.y}].clicked(mineGrid)">`;
-        if (square.isMine) {
-          squareString += "X";
-        } else {
-          const neighboursNum = square.neighbourMineCount;
-          squareString += neighboursNum === 0 ? "" : neighboursNum;
-        }
+
+        /*Start of filling in HTML*/
+        // if (square.isMine) {
+        //   squareString += "X";
+        // } else {
+        //   const neighboursNum = square.neighbourMineCount;
+        //   squareString += neighboursNum === 0 ? "" : neighboursNum;
+        // }
+        /*End*/
 
         squareString += "</button>";
 

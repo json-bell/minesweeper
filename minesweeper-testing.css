@@ -37,10 +37,9 @@
 } */
 
 .boomer {
-  background-color: rgb(211, 141, 95);
+  background-color: rgb(255, 163, 101);
 }
 
 .flagged {
-  background-color: darkred;
-  font-size: larger;
+  background-color: rgb(180, 129, 129);
 }
