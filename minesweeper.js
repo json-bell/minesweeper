@@ -45,12 +45,23 @@ class cell {
   clicked(mineGrid) {
     if (mineGrid.shiftPressed === false) {
       if (!this.isFlag) {
-        this.revealClicked(mineGrid);
+        if (!this.isRevealed) this.revealClicked(mineGrid);
+        else {
+          console.log(
+            "neighbour flags:",
+            mineGrid.countNeighbouringFlags(this.x, this.y),
+            "neighbourMines:",
+            this.neighbourMineCount
+          );
+          if (
+            mineGrid.countNeighbouringFlags(this.x, this.y) ===
+            this.neighbourMineCount
+          )
+            this.revealAllNeighbours(mineGrid);
+        }
       }
     } else {
-      if (!this.isRevealed) {
-        this.flagClicked(mineGrid);
-      }
+      if (!this.isRevealed) this.flagClicked(mineGrid);
     }
   }
 
@@ -85,8 +96,11 @@ class cell {
         for (const dy of differences) {
           const yToCheck = yCoord + dy;
           if (yToCheck >= 0 && yToCheck < mineGrid.yDim) {
-            if (!mineGrid.grid[xToCheck][yToCheck].isRevealed) {
-              mineGrid.grid[xToCheck][yToCheck].clicked(mineGrid);
+            if (
+              !mineGrid.grid[xToCheck][yToCheck].isRevealed &&
+              !mineGrid.grid[xToCheck][yToCheck].isFlag
+            ) {
+              mineGrid.grid[xToCheck][yToCheck].revealClicked(mineGrid);
             }
           }
         }
@@ -121,11 +135,9 @@ class minesweepingGrid {
   checkShift() {
     document.addEventListener("keydown", (event) => {
       this.shiftPressed = event.shiftKey;
-      console.log(this.shiftPressed);
     });
     document.addEventListener("keyup", (event) => {
       this.shiftPressed = event.shiftKey;
-      console.log(this.shiftPressed);
     });
   }
 
@@ -175,12 +187,12 @@ class minesweepingGrid {
   countAllNeighbourhoods() {
     for (let x = 0; x < this.xDim; x++) {
       for (let y = 0; y < this.yDim; y++) {
-        this.grid[x][y].neighbourMineCount = this.countNeighbours(x, y);
+        this.grid[x][y].neighbourMineCount = this.countNeighbouringMines(x, y);
       }
     }
   }
 
-  countNeighbours(xCoord, yCoord) {
+  countNeighbouringMines(xCoord, yCoord) {
     let neighbourMines = 0;
     const differences = [-1, 0, 1];
     for (const dx of differences) {
@@ -197,6 +209,25 @@ class minesweepingGrid {
       }
     }
     return neighbourMines;
+  }
+
+  countNeighbouringFlags(xCoord, yCoord) {
+    let neighbourFlags = 0;
+    const differences = [-1, 0, 1];
+    for (const dx of differences) {
+      const xToCheck = xCoord + dx;
+      if (xToCheck >= 0 && xToCheck < this.xDim) {
+        for (const dy of differences) {
+          const yToCheck = yCoord + dy;
+          if (yToCheck >= 0 && yToCheck < this.yDim) {
+            if (this.grid[xToCheck][yToCheck].isFlag) {
+              neighbourFlags++;
+            }
+          }
+        }
+      }
+    }
+    return neighbourFlags;
   }
 
   textVisualisationAll() {
