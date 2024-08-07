@@ -1,6 +1,6 @@
 # Minesweeper
 
-I coded this during the fundamentals section of my time at Northcoders - having done the HTML and CSS introduction day during the introduction week, I was intrigued to see how much I could code without relying on the front and back end skills which I'll develop during the front- and back-end parts of the course.
+I coded this during the fundamentals section of my time at Northcoders - having done the HTML and CSS introduction day during the introduction week, I was intrigued to see how much I could code without relying on the front and back end skills which I'll develop during the corresponding parts of the course.
 
 As always, searching documentation for HTML button functions and using the briefest amount of event handling for different clicks to differentiate between searches and flag placements.
 
